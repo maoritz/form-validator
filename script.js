@@ -19,10 +19,14 @@ function showSuccess(input){
 }
 
 // Check email is valid
-function validateEmail (email) {
+function checkEmail (input) {
     const re =
     /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    return re.test(String(email).toLocaleLowerCase())
+    if(re.test(input.value.trim())){
+        showSuccess(input)
+    } else{
+        showError(input,'Email is not valid')
+    }
   };
 
 // Check required fields
@@ -36,14 +40,21 @@ function checkRequired(inputArr){
     })
 }
 
+// Get fieldname
 function getFieldName(input){
     return input.id.charAt(0).toUpperCase() + input.id.slice(1);
 }
 
+// Check input length
 function checkLength(input,min,max){
     if(input.value.length < min)return showError(input,`${getFieldName(input)} must be at least ${min} characters`)
     if(input.value.length > max)return showError(input,`${getFieldName(input)} must be maximum of ${max} characters`)
     return showSuccess(input)
+}
+
+//  Check password match
+function checkPasswordMatch (value1,value2){
+    if(value1.value !== value2.value) return showError(value2,'Your passwords do not match')
 }
 
 // Event listeners
@@ -52,12 +63,7 @@ form.addEventListener('submit',function(e){
 
     checkRequired([username,email,password,password2])
     checkLength(username,3,15)
-    checkLength(password,8,25)
+    checkLength(password,6,25)
+    checkEmail(email)
+    checkPasswordMatch(password,password2)
 })
-
-
-
-//Create array of html's inputs names
-// const nodeList = document.querySelectorAll('input')
-// const nodeListToArray = Array.from(nodeList)
-// const inputArr = (() => nodeListToArray.map(item => item.id))()
