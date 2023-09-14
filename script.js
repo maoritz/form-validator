@@ -29,11 +29,21 @@ function validateEmail (email) {
 function checkRequired(inputArr){
     inputArr.forEach(input => {
         if(input.value.trim() === ''){
-            showError(input,'is required')
+            showError(input,`${getFieldName(input)} is required`)
         } else {
             showSuccess(input)
         }
     })
+}
+
+function getFieldName(input){
+    return input.id.charAt(0).toUpperCase() + input.id.slice(1);
+}
+
+function checkLength(input,min,max){
+    if(input.value.length < min)return showError(input,`${getFieldName(input)} must be at least ${min} characters`)
+    if(input.value.length > max)return showError(input,`${getFieldName(input)} must be maximum of ${max} characters`)
+    return showSuccess(input)
 }
 
 // Event listeners
@@ -41,6 +51,8 @@ form.addEventListener('submit',function(e){
     e.preventDefault()
 
     checkRequired([username,email,password,password2])
+    checkLength(username,3,15)
+    checkLength(password,8,25)
 })
 
 
